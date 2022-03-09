@@ -70,3 +70,7 @@ C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\
 C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\ref\Crud_CHUN.dll
 C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Crud_CHUN.pdb
 C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Crud_CHUN.genruntimeconfig.cache
+C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Razor\Views\Employee\AddOrEdit.cshtml.g.cs
+C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Razor\Views\Employee\Delete.cshtml.g.cs
+C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Razor\Views\Employee\Details.cshtml.g.cs
+C:\Users\CHUNs\Downloads\練習\01_CURD\01_練習\Crud_CHUN\Crud_CHUN\Crud_CHUN\obj\Debug\net5.0\Razor\Views\Employee\Index.cshtml.g.cs
