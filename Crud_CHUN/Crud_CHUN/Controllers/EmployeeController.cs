@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Crud_CHUN.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,79 +11,131 @@ namespace Crud_CHUN.Controllers
 {
     public class EmployeeController : Controller
     {
-        // GET: EmployeeController
-        public ActionResult Index()
+        //Dependency Injection
+        private readonly CompanyDBContext _context;
+
+        public EmployeeController(CompanyDBContext context)
         {
-            return View();
+            _context = context;
         }
 
-        // GET: EmployeeController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var employees = await _context.Employees.ToListAsync();
+            return View(employees);
         }
 
-        // GET: EmployeeController/Create
-        public ActionResult Create()
+        //AddOrEdit Get Method
+        public async Task<IActionResult> AddOrEdit(int? employeeId)
         {
-            return View();
-        }
-
-        // POST: EmployeeController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            ViewBag.PageName = employeeId == null ? "Create Employee" : "Edit Employee";
+            ViewBag.IsEdit = employeeId == null ? false : true;
+            if (employeeId == null)
             {
                 return View();
             }
+            else
+            {
+                var employee = await _context.Employees.FindAsync(employeeId);
+
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+                return View(employee);
+            }
         }
 
-        // GET: EmployeeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeeController/Edit/5
+        //AddOrEdit Post Method
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> AddOrEdit(int employeeId, [Bind("EmployeeId,Name,Designation,Address,Salary,JoiningDate")]
+        Employee employeeData)
         {
-            try
+            bool IsEmployeeExist = false;
+
+            Employee employee = await _context.Employees.FindAsync(employeeId);
+
+            if (employee != null)
             {
+                IsEmployeeExist = true;
+            }
+            else
+            {
+                employee = new Employee();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    employee.Name = employeeData.Name;
+                    employee.Designation = employeeData.Designation;
+                    employee.Address = employeeData.Address;
+                    employee.Salary = employeeData.Salary;
+                    employee.JoiningDate = employeeData.JoiningDate;
+
+                    if (IsEmployeeExist)
+                    {
+                        _context.Update(employee);
+                    }
+                    else
+                    {
+                        _context.Add(employee);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(employeeData);
         }
 
-        // GET: EmployeeController/Delete/5
-        public ActionResult Delete(int id)
+        // Employee Details
+        public async Task<IActionResult> Details(int? employeeId)
         {
-            return View();
+            if (employeeId == null)
+            {
+                return NotFound();
+            }
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmployeeId == employeeId);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
         }
 
-        // POST: EmployeeController/Delete/5
+        // GET: Employees/Delete/1
+        public async Task<IActionResult> Delete(int? employeeId)
+        {
+            if (employeeId == null)
+            {
+                return NotFound();
+            }
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmployeeId == employeeId);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
+        // POST: Employees/Delete/1
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int employeeId)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var employee = await _context.Employees.FindAsync(employeeId);
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
